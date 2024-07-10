@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /* class Singleton {
+        static instance = null
+
+        static getInstance() {
+          if (!Singleton.instance) {
+            Singleton.instance = new this()
+          }
+
+          return Singleton.instance
+        }
+      }
+
+      class WinDialog extends Singleton {
+        isOpen = false
+
+        static get instance() {
+          return super.getInstance()
+        }
+      } */
+
+      function Singleton() {
+        this.name = 'Singleton'
+      }
+
+      Singleton.getInstance = function () {
+        if (!Singleton.instance) {
+          Singleton.instance = new this()
+        }
+        return Singleton.instance
+      }
+
+      Singleton.instance = null
+
+      function WinDialog() {
+        // Singleton.call(this)
+        this.isOpen = false
+      }
+
+      WinDialog.prototype = new Singleton()
+      WinDialog.prototype.constructor = WinDialog
+
+      WinDialog.getInstance = Singleton.getInstance
+
+      Object.defineProperty(WinDialog, 'instance', {
+        get() {
+          return this.getInstance()
+        },
+      })
+
+      console.log(new WinDialog().name)
+    </script>
+  </body>
+</html>
