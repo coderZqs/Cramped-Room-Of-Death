@@ -33,7 +33,7 @@ export class BattleManager extends Component {
     DataManager.Instance.mapRowCount = level.mapInfo[0].length
     DataManager.Instance.mapInfo = level.mapInfo
 
-    // this.generateTileMap()
+    this.generateTileMap()
   }
 
   nextLevel() {
@@ -70,7 +70,7 @@ export class BattleManager extends Component {
     this.generateStage()
     this.initLevel()
     this.adoptPos()
-    // this.generatePlayer()
+    this.generatePlayer()
   }
 
   adoptPos() {

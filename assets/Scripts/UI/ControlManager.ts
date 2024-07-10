@@ -5,7 +5,8 @@ const { ccclass, property } = _decorator
 
 @ccclass('ControlManager')
 export class ControlManager extends Component {
-  handleControl() {
-    EventManager.Instance.emit(EVENT_ENUM.NEXT_LEVEL)
+  handleControl(event, type) {
+    EventManager.Instance.emit(EVENT_ENUM.PLAYER_CONTROL, type)
+    // EventManager.Instance.emit(EVENT_ENUM.NEXT_LEVEL)
   }
 }
