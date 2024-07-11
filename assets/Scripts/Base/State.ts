@@ -2,6 +2,7 @@ import { AnimationClip, animation, SpriteFrame, Sprite } from 'cc'
 import StateMachine from './StateMachine'
 import ResourceManager from '../Runtime/ResourceManager'
 import { FRAME_SPEED } from '../Player/PlayerManager'
+import { FSM_PARAM_TYPE_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 
 class State {
   public animationClip: AnimationClip
@@ -19,6 +20,7 @@ class State {
 
     let spriteFrame = await promise
     this.animationClip = new AnimationClip()
+    this.animationClip.name = this.path
 
     const track = new animation.ObjectTrack()
     track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')

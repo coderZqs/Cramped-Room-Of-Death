@@ -9,17 +9,24 @@ export interface IParamsValue {
   value: ParamsValueType
 }
 
-const initParamsInitTrigger = () => {
+export const getInitPramsTrigger = () => {
   return {
     type: FSM_PARAM_TYPE_ENUM.TRIGGER,
     value: false,
   }
 }
 
-class StateMachine extends Component {
-  private _currentState: State
-  private params: Map<string, IParamsValue> = new Map()
-  private stateMachines: Map<string, State> = new Map()
+export const getInitParamsNumber = () => {
+  return {
+    type: FSM_PARAM_TYPE_ENUM.NUMBER,
+    value: 0,
+  }
+}
+
+abstract class StateMachine extends Component {
+  public _currentState: State
+  public params: Map<string, IParamsValue> = new Map()
+  public stateMachines: Map<string, State> = new Map()
   public animationComponent: Animation
   waitingList: Array<Promise<SpriteFrame[]>> = []
 
@@ -42,45 +49,35 @@ class StateMachine extends Component {
     if (this.params.has(paramsName)) {
       this.params.get(paramsName).value = paramsValue
       this.run()
+      this.resetTrigger()
     }
   }
 
-  async init() {
-    this.animationComponent = this.addComponent(Animation)
-    this.initParams()
-    this.initStateMachines()
-    await Promise.all(this.waitingList)
+  resetTrigger() {
+    for (let [_, value] of this.params) {
+      if (value.type === FSM_PARAM_TYPE_ENUM.TRIGGER) {
+        value.value = false
+      }
+    }
   }
 
-  initParams() {
-    this.params.set(PARAMS_NAME_ENUM.IDLE, initParamsInitTrigger())
-    this.params.set(PARAMS_NAME_ENUM.TURN_LEFT, initParamsInitTrigger())
-  }
+  initParamsEvent() {
+    this.animationComponent.on(
+      Animation.EventType.FINISHED,
+      () => {
+        let name = this.animationComponent.defaultClip.name
+        let whiteList = ['turn']
 
-  async initStateMachines() {
-    this.stateMachines.set(PARAMS_NAME_ENUM.IDLE, new State(this, 'texture/player/idle/top'))
-    this.stateMachines.set(
-      PARAMS_NAME_ENUM.TURN_LEFT,
-      new State(this, 'texture/player/turnleft/top', AnimationClip.WrapMode.Normal),
+        if (whiteList.some(v => name.includes(v))) {
+          this.setParams(PARAMS_NAME_ENUM.IDLE, true)
+        }
+      },
+      this,
     )
   }
 
-  run() {
-    switch (this._currentState) {
-      case this.stateMachines.get(PARAMS_NAME_ENUM.IDLE):
-      case this.stateMachines.get(PARAMS_NAME_ENUM.TURN_LEFT):
-        if (this.params.get(PARAMS_NAME_ENUM.TURN_LEFT).value) {
-          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.TURN_LEFT)
-        } else if (this.params.get(PARAMS_NAME_ENUM.IDLE).value) {
-          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.IDLE)
-        }
-
-        break
-
-      default:
-        this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.IDLE)
-    }
-  }
+  abstract init()
+  abstract run(): void
 }
 
 export default StateMachine

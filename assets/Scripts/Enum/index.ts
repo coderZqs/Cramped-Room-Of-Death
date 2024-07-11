@@ -14,13 +14,23 @@ export enum FSM_PARAM_TYPE_ENUM {
 export enum PARAMS_NAME_ENUM {
   IDLE = 'IDLE',
   TURN_LEFT = 'TURN_LEFT',
+  DIRECTION = 'DIRECTION',
 }
 
-export enum DIRECTION_ENUM {
+export enum CONTROLLER_ENUM {
   UP = 'UP',
   BOTTOM = 'BOTTOM',
   LEFT = 'LEFT',
   RIGHT = 'RIGHT',
+}
+
+export enum ENTITY_TYPE_ENUM {
   TURN_LEFT = 'TURN_LEFT',
-  TURN_RIGHT = 'TURN_RIGHT',
+}
+
+export enum DIRECTION_ORDER_ENUM {
+  UP = 0,
+  BOTTOM = 1,
+  LEFT = 2,
+  RIGHT = 3,
 }

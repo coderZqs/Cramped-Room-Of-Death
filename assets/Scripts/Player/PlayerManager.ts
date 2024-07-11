@@ -1,9 +1,8 @@
 import { _decorator, Component, SpriteFrame, animation, AnimationClip, Vec3, Sprite, UITransform, Animation } from 'cc'
 import { TILE_HEIGHT, TILE_WIDTH } from '../Enum/level'
-import ResourceManager from '../Runtime/ResourceManager'
-import StateMachine from '../Base/StateMachine'
+import StateMachine from './PlayerStateMachine'
 import EventManager from '../Runtime/EventManager'
-import { DIRECTION_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from '../Enum'
+import { CONTROLLER_ENUM, DIRECTION_ORDER_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 
 const { ccclass } = _decorator
 
@@ -16,6 +15,8 @@ export class PlayerManager extends Component {
   public targetY = 0
   public x = 0
   public y = 0
+  public _direction = CONTROLLER_ENUM.UP
+  public _state
 
   async start() {
     const sprite = this.addComponent(Sprite)
@@ -26,9 +27,27 @@ export class PlayerManager extends Component {
 
     this.fsm = this.addComponent(StateMachine)
     await this.fsm.init()
+    this._state = PARAMS_NAME_ENUM.IDLE
 
-    this.fsm.setParams(PARAMS_NAME_ENUM.IDLE, true)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CONTROL, this.move, this)
+  }
+
+  get state() {
+    return this._state
+  }
+
+  set state(state) {
+    this._state = state
+    this.fsm.setParams(state, true)
+  }
+
+  get direction() {
+    return this._direction
+  }
+
+  set direction(e) {
+    this._direction = e
+    this.fsm.setParams(PARAMS_NAME_ENUM.DIRECTION, DIRECTION_ORDER_ENUM[e])
   }
 
   update() {
@@ -58,16 +77,20 @@ export class PlayerManager extends Component {
 
   move(direction) {
     console.log(direction)
-    if (direction === DIRECTION_ENUM.UP) {
+    if (direction === CONTROLLER_ENUM.UP) {
+      this._direction = CONTROLLER_ENUM.UP
       this.targetY += 1
-    } else if (direction === DIRECTION_ENUM.BOTTOM) {
+    } else if (direction === CONTROLLER_ENUM.BOTTOM) {
+      this._direction = CONTROLLER_ENUM.BOTTOM
       this.targetY -= 1
-    } else if (direction === DIRECTION_ENUM.LEFT) {
+    } else if (direction === CONTROLLER_ENUM.LEFT) {
+      this._direction = CONTROLLER_ENUM.LEFT
       this.targetX -= 1
-    } else if (direction === DIRECTION_ENUM.RIGHT) {
+    } else if (direction === CONTROLLER_ENUM.RIGHT) {
+      this._direction = CONTROLLER_ENUM.RIGHT
       this.targetX += 1
-    } else if (direction === DIRECTION_ENUM.TURN_LEFT) {
-      this.fsm.setParams(PARAMS_NAME_ENUM.TURN_LEFT, true)
+    } else if (direction === CONTROLLER_ENUM.TURN_LEFT) {
+      this.state = ENTITY_TYPE_ENUM.TURN_LEFT
     }
   }
 }
