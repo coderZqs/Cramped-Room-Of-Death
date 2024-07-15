@@ -1,6 +1,6 @@
 import { _decorator, Component, SpriteFrame, animation, AnimationClip, Vec3, Sprite, UITransform, Animation } from 'cc'
 import { TILE_HEIGHT, TILE_WIDTH } from '../Enum/level'
-import StateMachine from './PlayerStateMachine'
+import PlayerStateMachine from './PlayerStateMachine'
 import EventManager from '../Runtime/EventManager'
 import { CONTROLLER_ENUM, DIRECTION_ORDER_ENUM, ENTITY_TYPE_ENUM, EVENT_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 
@@ -10,7 +10,7 @@ export const FRAME_SPEED = 1 / 8
 
 @ccclass('PlayerManager')
 export class PlayerManager extends Component {
-  public fsm: StateMachine = null
+  public fsm: PlayerStateMachine = null
   public targetX = 0
   public targetY = 0
   public x = 0
@@ -25,9 +25,9 @@ export class PlayerManager extends Component {
     const transform = this.addComponent(UITransform)
     transform.setContentSize(TILE_WIDTH * 4, TILE_HEIGHT * 4)
 
-    this.fsm = this.addComponent(StateMachine)
+    this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
-    this._state = PARAMS_NAME_ENUM.IDLE
+    this.state = PARAMS_NAME_ENUM.IDLE
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CONTROL, this.move, this)
   }
@@ -78,19 +78,21 @@ export class PlayerManager extends Component {
   move(direction) {
     console.log(direction)
     if (direction === CONTROLLER_ENUM.UP) {
-      this._direction = CONTROLLER_ENUM.UP
+      this.direction = CONTROLLER_ENUM.UP
       this.targetY += 1
     } else if (direction === CONTROLLER_ENUM.BOTTOM) {
-      this._direction = CONTROLLER_ENUM.BOTTOM
+      this.direction = CONTROLLER_ENUM.BOTTOM
       this.targetY -= 1
     } else if (direction === CONTROLLER_ENUM.LEFT) {
-      this._direction = CONTROLLER_ENUM.LEFT
+      this.direction = CONTROLLER_ENUM.LEFT
       this.targetX -= 1
     } else if (direction === CONTROLLER_ENUM.RIGHT) {
-      this._direction = CONTROLLER_ENUM.RIGHT
+      this.direction = CONTROLLER_ENUM.RIGHT
       this.targetX += 1
     } else if (direction === CONTROLLER_ENUM.TURN_LEFT) {
-      this.state = ENTITY_TYPE_ENUM.TURN_LEFT
+      if(){
+
+      }
     }
   }
 }

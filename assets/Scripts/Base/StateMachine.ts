@@ -46,6 +46,7 @@ abstract class StateMachine extends Component {
   }
 
   setParams(paramsName, paramsValue: ParamsValueType) {
+    console.log(31231)
     if (this.params.has(paramsName)) {
       this.params.get(paramsName).value = paramsValue
       this.run()
