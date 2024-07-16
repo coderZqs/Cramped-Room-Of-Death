@@ -1,6 +1,7 @@
 import State from './State'
-import { FSM_PARAM_TYPE_ENUM, PARAMS_NAME_ENUM } from '../Enum'
+import { CONTROLLER_ENUM, FSM_PARAM_TYPE_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 import { Animation, AnimationClip, Component, SpriteFrame } from 'cc'
+import SubStateMachine from './SubStateMachine'
 
 type ParamsValueType = boolean | number
 
@@ -24,17 +25,18 @@ export const getInitParamsNumber = () => {
 }
 
 abstract class StateMachine extends Component {
-  public _currentState: State
+  public _currentState: State | SubStateMachine
   public params: Map<string, IParamsValue> = new Map()
-  public stateMachines: Map<string, State> = new Map()
+  public stateMachines: Map<string, State | SubStateMachine> = new Map()
   public animationComponent: Animation
+
   waitingList: Array<Promise<SpriteFrame[]>> = []
 
   get currentState() {
     return this.currentState
   }
 
-  set currentState(state: State) {
+  set currentState(state: State | SubStateMachine) {
     this._currentState = state
     this._currentState.run()
   }
@@ -46,7 +48,7 @@ abstract class StateMachine extends Component {
   }
 
   setParams(paramsName, paramsValue: ParamsValueType) {
-    console.log(31231)
+    console.log(paramsName, paramsValue)
     if (this.params.has(paramsName)) {
       this.params.get(paramsName).value = paramsValue
       this.run()

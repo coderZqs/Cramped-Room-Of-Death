@@ -75,6 +75,6 @@ export class BattleManager extends Component {
 
   adoptPos() {
     const { mapRowCount, mapColCount } = DataManager.Instance
-    this.stage.setPosition((-mapRowCount * TILE_WIDTH) / 2, (mapColCount * TILE_HEIGHT) / 2 + 120)
+    this.stage.setPosition((-mapRowCount * TILE_WIDTH) / 2, (mapColCount * TILE_HEIGHT) / 2 + 80)
   }
 }

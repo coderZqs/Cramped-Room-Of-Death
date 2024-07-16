@@ -1,3 +1,5 @@
+import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM } from '../Enum/index'
+
 export enum TILE_TYPE_ENUM {
   WALL_LEFT_TOP = 'WALL_LEFT_TOP',
   WALL_COLUMN = 'WALL_COLUMN',
@@ -18,6 +20,8 @@ export enum TILE_TYPE_ENUM {
 export interface ITile {
   src: number
   type: TILE_TYPE_ENUM
+  moveable: boolean
+  turnable: boolean
 }
 
 export interface ILevel {
@@ -26,5 +30,13 @@ export interface ILevel {
   rowCount: number
 }
 
-export const TILE_WIDTH = 50
-export const TILE_HEIGHT = 50
+export interface IEntity {
+  x: number
+  y: number
+  direction: DIRECTION_ENUM
+  state: ENTITY_STATE_ENUM
+  type: ENTITY_TYPE_ENUM
+}
+
+export const TILE_WIDTH = 55
+export const TILE_HEIGHT = 55

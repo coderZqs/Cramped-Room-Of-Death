@@ -10,11 +10,12 @@ const { ccclass, property } = _decorator
 @ccclass('TileMapManager')
 export class TileMapManager extends Component {
   async init() {
-    console.log(ResourceManager.Instance)
+    DataManager.Instance.tileInfo = []
     const spriteFrame = await ResourceManager.Instance.loadRes('texture/tile/tile')
 
     const mapInfo = Levels['Level' + DataManager.Instance.levelIndex].mapInfo
     for (let i = 0; i < mapInfo.length; i++) {
+      DataManager.Instance.tileInfo[i] = []
       const column = mapInfo[i]
 
       for (let j = 0; j < column.length; j++) {
@@ -36,7 +37,9 @@ export class TileMapManager extends Component {
         const tile = Utils.createNode()
         const tileManager = tile.addComponent(TileManager)
 
-        tileManager.init(frame, i, j)
+        DataManager.Instance.tileInfo[i][j] = tileManager
+
+        tileManager.init(type, frame, i, j)
         tile.setParent(this.node)
       }
     }

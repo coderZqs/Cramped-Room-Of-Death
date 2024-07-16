@@ -2,6 +2,7 @@ import { AnimationClip, animation, SpriteFrame, Sprite } from 'cc'
 import StateMachine from './StateMachine'
 import ResourceManager from '../Runtime/ResourceManager'
 import { FRAME_SPEED } from '../Player/PlayerManager'
+import SubStateMachine from './SubStateMachine'
 import { FSM_PARAM_TYPE_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 
 class State {
