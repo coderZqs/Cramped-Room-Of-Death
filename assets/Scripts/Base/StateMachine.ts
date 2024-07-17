@@ -10,7 +10,7 @@ export interface IParamsValue {
   value: ParamsValueType
 }
 
-export const getInitPramsTrigger = () => {
+export const getInitParamsTrigger = () => {
   return {
     type: FSM_PARAM_TYPE_ENUM.TRIGGER,
     value: false,
@@ -69,7 +69,8 @@ abstract class StateMachine extends Component {
       Animation.EventType.FINISHED,
       () => {
         let name = this.animationComponent.defaultClip.name
-        let whiteList = ['turn']
+        console.log(name)
+        let whiteList = ['turn', 'block']
 
         if (whiteList.some(v => name.includes(v))) {
           this.setParams(PARAMS_NAME_ENUM.IDLE, true)
