@@ -8,6 +8,7 @@ import DataManager from '../Runtime/DataManager'
 import { EVENT_ENUM } from '../Enum'
 import EventManager from '../Runtime/EventManager'
 import { PlayerManager } from '../Player/PlayerManager'
+import WoodenSkeletonManager from '../Enemy/WoordenSkeletonManager'
 
 const { ccclass, property } = _decorator
 
@@ -16,6 +17,7 @@ export class BattleManager extends Component {
   level: ILevel
   stage: Node = null
   player: Node = null
+  enemy: Node[] = []
 
   protected onLoad(): void {
     EventManager.Instance.on(EVENT_ENUM.NEXT_LEVEL, this.nextLevel, this)
@@ -48,10 +50,18 @@ export class BattleManager extends Component {
   }
 
   generatePlayer() {
-    this.player = Utils.createNode('player')
-    this.player.addComponent(PlayerManager)
-    this.player.setParent(this.stage)
-    // this.player.layer = 10
+    let player = Utils.createNode('player')
+    let playerManager = player.addComponent(PlayerManager)
+    player.setParent(this.stage)
+    DataManager.Instance.player = playerManager
+  }
+
+  generateEnemy() {
+    let enemy = Utils.createNode()
+    enemy.addComponent(WoodenSkeletonManager)
+    enemy.setParent(this.stage)
+
+    this.enemy.push(enemy)
   }
 
   generateTileMap() {
@@ -71,6 +81,7 @@ export class BattleManager extends Component {
     this.initLevel()
     this.adoptPos()
     this.generatePlayer()
+    this.generateEnemy()
   }
 
   adoptPos() {

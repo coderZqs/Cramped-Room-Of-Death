@@ -13,7 +13,6 @@ abstract class SubStateMachine {
   }
 
   set currentState(state: State) {
-    console.log(state)
     this._currentState = state
     this.currentState.run()
   }

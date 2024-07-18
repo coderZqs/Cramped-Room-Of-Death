@@ -80,6 +80,8 @@ class PlayerStateMachine extends StateMachine {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_BOTTOM)
         } else if (this.params.get(PARAMS_NAME_ENUM.BLOCK_RIGHT).value) {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_RIGHT)
+        } else {
+          this.currentState = this.currentState
         }
 
         break

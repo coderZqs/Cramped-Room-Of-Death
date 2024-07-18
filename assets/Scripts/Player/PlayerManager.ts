@@ -20,6 +20,7 @@ export const FRAME_SPEED = 1 / 8
 export class PlayerManager extends EntityManager {
   public targetX = 0
   public targetY = 0
+  public isMoving = false
 
   async start() {
     this.fsm = this.addComponent(PlayerStateMachine)
@@ -56,9 +57,13 @@ export class PlayerManager extends EntityManager {
       this.y += 1
     }
 
-    if (Math.abs(this.x - this.targetX) < 0.1 && Math.abs(this.y - this.targetY) < 0.1) {
+    if (Math.abs(this.x - this.targetX) < 0.1 && Math.abs(this.y - this.targetY) < 0.1 && this.isMoving) {
       this.x = this.targetX
       this.y = this.targetY
+
+      this.isMoving = false
+
+      EventManager.Instance.emit(EVENT_ENUM.PLAYER_MOVE_END)
     }
   }
 
@@ -121,10 +126,10 @@ export class PlayerManager extends EntityManager {
           params = directions[index]
         } else if (DIRECTION_ENUM.BOTTOM === this.direction) {
           let index = directions.findIndex(v => v.includes(direction))
-          params = directions[index + 2 <= 3 ? index + 2 : (index - 1) % 3]
+          params = directions[index + 2 <= 3 ? index + 2 : (index - 2) % 4]
         } else if (DIRECTION_ENUM.LEFT === this.direction) {
           let index = directions.findIndex(v => v.includes(direction))
-          params = directions[index + 1 <= 3 ? index + 1 : (index - 1) % 3]
+          params = directions[index + 1 <= 3 ? index + 1 : (index - 1) % 4]
         } else if (DIRECTION_ENUM.RIGHT === this.direction) {
           let index = directions.findIndex(v => v.includes(direction))
           params = directions[index - 1 >= 0 ? index - 1 : 3 % (index - 1)]
@@ -240,6 +245,8 @@ export class PlayerManager extends EntityManager {
   }
 
   move(control_direction) {
+    this.isMoving = true
+
     if (control_direction === CONTROLLER_ENUM.UP) {
       this.targetY -= 1
     } else if (control_direction === CONTROLLER_ENUM.BOTTOM) {

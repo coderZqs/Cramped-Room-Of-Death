@@ -33,10 +33,14 @@ abstract class StateMachine extends Component {
   waitingList: Array<Promise<SpriteFrame[]>> = []
 
   get currentState() {
-    return this.currentState
+    return this._currentState
   }
 
   set currentState(state: State | SubStateMachine) {
+    if (!state) {
+      return
+    }
+
     this._currentState = state
     this._currentState.run()
   }
@@ -48,9 +52,9 @@ abstract class StateMachine extends Component {
   }
 
   setParams(paramsName, paramsValue: ParamsValueType) {
-    console.log(paramsName, paramsValue)
     if (this.params.has(paramsName)) {
       this.params.get(paramsName).value = paramsValue
+      console.log(paramsName, this.params.get(paramsName).value)
       this.run()
       this.resetTrigger()
     }
@@ -69,7 +73,6 @@ abstract class StateMachine extends Component {
       Animation.EventType.FINISHED,
       () => {
         let name = this.animationComponent.defaultClip.name
-        console.log(name)
         let whiteList = ['turn', 'block']
 
         if (whiteList.some(v => name.includes(v))) {
