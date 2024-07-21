@@ -22,21 +22,23 @@ export class PlayerManager extends EntityManager {
   public targetY = 0
   public isMoving = false
 
-  async start() {
+  async init(params) {
     this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
-    this.init({
-      x: 2,
-      y: 8,
-      direction: DIRECTION_ENUM.UP,
-      state: ENTITY_STATE_ENUM.IDLE,
-      type: ENTITY_TYPE_ENUM.IDLE,
-    })
+    super.init(params)
 
     this.targetX = this.x
     this.targetY = this.y
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CONTROL, this.inputHandle, this)
+    EventManager.Instance.on(EVENT_ENUM.PLAYER_DEATH, this.onDeath, this)
+
+    EventManager.Instance.emit(EVENT_ENUM.PLAYER_BORN)
+  }
+
+  onDestroy() {
+    EventManager.Instance.off(EVENT_ENUM.PLAYER_CONTROL, this.inputHandle)
+    EventManager.Instance.off(EVENT_ENUM.PLAYER_DEATH, this.onDeath)
   }
 
   update() {
@@ -46,15 +48,15 @@ export class PlayerManager extends EntityManager {
 
   updateXY() {
     if (this.x > this.targetX) {
-      this.x -= 1
+      this.x -= FRAME_SPEED
     } else if (this.x < this.targetX) {
-      this.x += 1
+      this.x += FRAME_SPEED
     }
 
     if (this.y > this.targetY) {
-      this.y -= 1
+      this.y -= FRAME_SPEED
     } else if (this.y < this.targetY) {
-      this.y += 1
+      this.y += FRAME_SPEED
     }
 
     if (Math.abs(this.x - this.targetX) < 0.1 && Math.abs(this.y - this.targetY) < 0.1 && this.isMoving) {
@@ -68,15 +70,19 @@ export class PlayerManager extends EntityManager {
   }
 
   inputHandle(direction) {
-    if (this.willBlock(direction)) {
+    if (this.willAttack()) {
       return
     }
 
-    this.move(direction)
+    if (!this.willBlock(direction)) {
+      this.move(direction)
+    }
   }
 
   willBlock(direction): boolean {
     let { targetX: x, targetY: y } = this
+
+    console.log(x, y)
 
     /**
      * 判断移动时是否会被阻挡
@@ -114,7 +120,19 @@ export class PlayerManager extends EntityManager {
       let playerTile = DataManager.Instance.tileInfo[playerNextPoi.x][playerNextPoi.y]
       let weaponTile = DataManager.Instance.tileInfo[weaponNextPoi.x][weaponNextPoi.y]
 
-      if (playerTile && playerTile.moveable && (!weaponTile || weaponTile.turnable)) {
+      let enemy = DataManager.Instance.enemy.find(v => {
+        return (
+          (v.x === playerNextPoi.x && v.y === playerNextPoi.y) || (v.x === weaponNextPoi.x && v.y === weaponNextPoi.y)
+        )
+      })
+
+      if (
+        !playerTile ||
+        (playerTile &&
+          playerTile.moveable &&
+          (!weaponTile || weaponTile.turnable) &&
+          (!enemy || enemy.state === ENTITY_STATE_ENUM.DEATH))
+      ) {
         return false
       } else {
         let params = ''
@@ -225,11 +243,17 @@ export class PlayerManager extends EntityManager {
       let weaponNextPoiTile = DataManager.Instance.tileInfo[weaponNextPoi.x][weaponNextPoi.y]
       let weaponTurnFirstPoiTile = DataManager.Instance.tileInfo[weaponTurnFirstPoi.x][weaponTurnFirstPoi.y]
 
+      let enemy = DataManager.Instance.enemy.find(v => {
+        return (
+          (v.x === weaponNextPoi.x && v.y === weaponNextPoi.y) ||
+          (v.x === weaponTurnFirstPoi.x && v.y === weaponTurnFirstPoi.y)
+        )
+      })
+
       if (
-        weaponNextPoiTile &&
-        weaponNextPoiTile.turnable &&
-        weaponTurnFirstPoiTile &&
-        weaponTurnFirstPoiTile.turnable
+        ((weaponNextPoiTile && weaponNextPoiTile.turnable) || !weaponNextPoiTile) &&
+        ((weaponTurnFirstPoiTile && weaponTurnFirstPoiTile.turnable) || !weaponTurnFirstPoiTile) &&
+        (!enemy || enemy.state === ENTITY_STATE_ENUM.DEATH)
       ) {
         return false
       } else {
@@ -244,18 +268,26 @@ export class PlayerManager extends EntityManager {
     }
   }
 
-  move(control_direction) {
+  move(controlDirection) {
     this.isMoving = true
 
-    if (control_direction === CONTROLLER_ENUM.UP) {
+    let burst = DataManager.Instance.burst
+
+    burst.forEach(v => {
+      if (v.x === this.targetX && v.y === this.targetY) {
+        v.state = ENTITY_STATE_ENUM.DEATH
+      }
+    })
+
+    if (controlDirection === CONTROLLER_ENUM.UP) {
       this.targetY -= 1
-    } else if (control_direction === CONTROLLER_ENUM.BOTTOM) {
+    } else if (controlDirection === CONTROLLER_ENUM.BOTTOM) {
       this.targetY += 1
-    } else if (control_direction === CONTROLLER_ENUM.LEFT) {
+    } else if (controlDirection === CONTROLLER_ENUM.LEFT) {
       this.targetX -= 1
-    } else if (control_direction === CONTROLLER_ENUM.RIGHT) {
+    } else if (controlDirection === CONTROLLER_ENUM.RIGHT) {
       this.targetX += 1
-    } else if (control_direction === CONTROLLER_ENUM.TURN_LEFT) {
+    } else if (controlDirection === CONTROLLER_ENUM.TURN_LEFT) {
       if (this.direction === DIRECTION_ENUM.UP) {
         this.direction = DIRECTION_ENUM.LEFT
       } else if (this.direction === DIRECTION_ENUM.BOTTOM) {
@@ -267,7 +299,7 @@ export class PlayerManager extends EntityManager {
       }
 
       this.state = PARAMS_NAME_ENUM.TURN_LEFT
-    } else if (control_direction === CONTROLLER_ENUM.TURN_RIGHT) {
+    } else if (controlDirection === CONTROLLER_ENUM.TURN_RIGHT) {
       if (this.direction === DIRECTION_ENUM.BOTTOM) {
         this.direction = DIRECTION_ENUM.LEFT
       } else if (this.direction === DIRECTION_ENUM.UP) {
@@ -280,5 +312,46 @@ export class PlayerManager extends EntityManager {
 
       this.state = PARAMS_NAME_ENUM.TURN_RIGHT
     }
+
+    let playerTile = DataManager.Instance.tileInfo[this.targetX][this.targetY]
+
+    if (
+      !playerTile ||
+      burst.find(v => v.x === this.targetX && v.y === this.targetY)?.state === ENTITY_STATE_ENUM.DEATH
+    ) {
+      this.state = ENTITY_STATE_ENUM.AIRDEATH
+    }
+  }
+
+  willAttack() {
+    let enemyGroup = DataManager.Instance.enemy
+
+    for (let i = 0; i < enemyGroup.length; i++) {
+      if (
+        (this.direction === DIRECTION_ENUM.UP && this.targetY - 2 === enemyGroup[i].y && this.x === enemyGroup[i].x) ||
+        (this.direction === DIRECTION_ENUM.BOTTOM &&
+          this.targetY + 2 === enemyGroup[i].y &&
+          this.x === enemyGroup[i].x) ||
+        (this.direction === DIRECTION_ENUM.LEFT &&
+          this.targetX + 2 === enemyGroup[i].x &&
+          this.y === enemyGroup[i].y) ||
+        (this.direction === DIRECTION_ENUM.RIGHT && this.targetX - 2 === enemyGroup[i].x && this.y === enemyGroup[i].y)
+      ) {
+        if (enemyGroup[i].state !== ENTITY_STATE_ENUM.DEATH) {
+          this.state = ENTITY_STATE_ENUM.ATTACK
+          EventManager.Instance.emit(EVENT_ENUM.ENEMY_DEATH, enemyGroup[i].id)
+
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+
+    return false
+  }
+
+  onDeath() {
+    this.state = PARAMS_NAME_ENUM.DEATH
   }
 }

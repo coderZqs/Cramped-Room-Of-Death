@@ -4,7 +4,7 @@ import { CONTROLLER_ENUM } from '../Enum'
 import { AnimationClip } from 'cc'
 import DirectionSubStateMachine from '../Base/DirectionSubStateMachine'
 
-const BASE_URL = 'texture/player/turnright/'
+const BASE_URL = 'texture/player/blockturnright/'
 
 class TurnRightSubStateMachine extends DirectionSubStateMachine {
   constructor(fsm: StateMachine) {

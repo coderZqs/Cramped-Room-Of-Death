@@ -4,9 +4,9 @@ import State from '../Base/State'
 import StateMachine from '../Base/StateMachine'
 import { DIRECTION_ENUM } from '../Enum'
 
-let BASE_URL = 'texture/woodenskeleton/attack/'
+let BASE_URL = 'texture/woodenskeleton/death/'
 
-class AttackSubStateManager extends DirectionSubStateMachine {
+class DeathSubStateMachine extends DirectionSubStateMachine {
   constructor(fsm: StateMachine) {
     super(fsm)
 
@@ -17,4 +17,4 @@ class AttackSubStateManager extends DirectionSubStateMachine {
   }
 }
 
-export default AttackSubStateManager
+export default DeathSubStateMachine

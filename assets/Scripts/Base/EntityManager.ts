@@ -25,8 +25,8 @@ export default class EntityManager extends Component {
     this.x = params.x
     this.y = params.y
 
-    this.state = PARAMS_NAME_ENUM.IDLE
-    this.direction = DIRECTION_ENUM.UP
+    this.state = params.state
+    this.direction = params.direction
   }
 
   get state() {

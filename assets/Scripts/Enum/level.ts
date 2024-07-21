@@ -1,4 +1,5 @@
 import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM } from '../Enum/index'
+import { PlayerManager } from '../Player/PlayerManager'
 
 export enum TILE_TYPE_ENUM {
   WALL_LEFT_TOP = 'WALL_LEFT_TOP',
@@ -28,9 +29,21 @@ export interface ILevel {
   mapInfo: Array<Array<ITile>>
   colCount: number
   rowCount: number
+  player: IEntity
+  door: IEntity
+  enemies: Array<IEnemy>
+  bursts: Array<IEntity>
 }
 
 export interface IEntity {
+  x: number
+  y: number
+  direction: DIRECTION_ENUM
+  state: ENTITY_STATE_ENUM
+  type: ENTITY_TYPE_ENUM
+}
+
+export interface IEnemy {
   x: number
   y: number
   direction: DIRECTION_ENUM

@@ -10,7 +10,10 @@ import BlockUpSubStateMachine from './BlockUpSubStateMachine'
 import BlockBottomSubStateMachine from './BlockBottomSubStateMachine'
 import BlockRightSubStateMachine from './BlockRightSubStateMachine'
 import BlockTurnLeftSubStateMachine from './BlockTurnLeftSubStateMachine'
-import BlockTurnRightSubStateMachine from './BlockTurnLeftSubStateMachine'
+import BlockTurnRightSubStateMachine from './BlockTurnRightSubStateMachine'
+import DeathSubStateMachine from './DeathSubStateMachine'
+import AttackSubStateMachine from './AttackSubStateMachine'
+import AirDeathSubStateMachine from './AirDeathSubStateMachine'
 
 type ParamsValueType = boolean | number
 
@@ -40,6 +43,9 @@ class PlayerStateMachine extends StateMachine {
     this.params.set(PARAMS_NAME_ENUM.BLOCK_RIGHT, getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.BLOCK_TURN_LEFT, getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.BLOCK_TURN_RIGHT, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.DEATH, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.ATTACK, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.AIRDEATH, getInitParamsTrigger())
   }
 
   async initStateMachines() {
@@ -51,7 +57,10 @@ class PlayerStateMachine extends StateMachine {
     this.stateMachines.set(PARAMS_NAME_ENUM.BLOCK_BOTTOM, new BlockBottomSubStateMachine(this))
     this.stateMachines.set(PARAMS_NAME_ENUM.BLOCK_RIGHT, new BlockRightSubStateMachine(this))
     this.stateMachines.set(PARAMS_NAME_ENUM.BLOCK_TURN_LEFT, new BlockTurnLeftSubStateMachine(this))
-    this.stateMachines.set(PARAMS_NAME_ENUM.BLOCK_RIGHT, new BlockTurnRightSubStateMachine(this))
+    this.stateMachines.set(PARAMS_NAME_ENUM.BLOCK_TURN_RIGHT, new BlockTurnRightSubStateMachine(this))
+    this.stateMachines.set(PARAMS_NAME_ENUM.DEATH, new DeathSubStateMachine(this))
+    this.stateMachines.set(PARAMS_NAME_ENUM.ATTACK, new AttackSubStateMachine(this))
+    this.stateMachines.set(PARAMS_NAME_ENUM.AIRDEATH, new AirDeathSubStateMachine(this))
   }
 
   run() {
@@ -80,6 +89,16 @@ class PlayerStateMachine extends StateMachine {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_BOTTOM)
         } else if (this.params.get(PARAMS_NAME_ENUM.BLOCK_RIGHT).value) {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_RIGHT)
+        } else if (this.params.get(PARAMS_NAME_ENUM.BLOCK_TURN_LEFT).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_TURN_LEFT)
+        } else if (this.params.get(PARAMS_NAME_ENUM.BLOCK_TURN_RIGHT).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.BLOCK_TURN_RIGHT)
+        } else if (this.params.get(PARAMS_NAME_ENUM.DEATH).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.DEATH)
+        } else if (this.params.get(PARAMS_NAME_ENUM.ATTACK).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.ATTACK)
+        } else if (this.params.get(PARAMS_NAME_ENUM.AIRDEATH).value) {
+          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.AIRDEATH)
         } else {
           this.currentState = this.currentState
         }

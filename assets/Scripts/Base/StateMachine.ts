@@ -54,7 +54,6 @@ abstract class StateMachine extends Component {
   setParams(paramsName, paramsValue: ParamsValueType) {
     if (this.params.has(paramsName)) {
       this.params.get(paramsName).value = paramsValue
-      console.log(paramsName, this.params.get(paramsName).value)
       this.run()
       this.resetTrigger()
     }
@@ -73,7 +72,7 @@ abstract class StateMachine extends Component {
       Animation.EventType.FINISHED,
       () => {
         let name = this.animationComponent.defaultClip.name
-        let whiteList = ['turn', 'block']
+        let whiteList = ['turn', 'block', 'attack']
 
         if (whiteList.some(v => name.includes(v))) {
           this.setParams(PARAMS_NAME_ENUM.IDLE, true)

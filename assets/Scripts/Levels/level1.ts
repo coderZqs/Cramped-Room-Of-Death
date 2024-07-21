@@ -1,4 +1,5 @@
-import { TILE_TYPE_ENUM, ILevel } from '../Enum/level'
+import { DIRECTION_ENUM, ENTITY_TYPE_ENUM, ENTITY_STATE_ENUM } from '../Enum'
+import { TILE_TYPE_ENUM, IEntity, ILevel } from '../Enum/level'
 
 const mapInfo = [
   [
@@ -423,10 +424,42 @@ const mapInfo = [
   ],
 ]
 
-const Level1: ILevel = {
-  mapInfo,
-  rowCount: 0,
-  colCount: 0,
+const player: IEntity = {
+  x: 2,
+  y: 8,
+  direction: DIRECTION_ENUM.UP,
+  state: ENTITY_STATE_ENUM.IDLE,
+  type: ENTITY_TYPE_ENUM.PLAYER,
 }
 
-export default Level1
+const enemies: Array<IEntity> = [
+  {
+    x: 7,
+    y: 6,
+    direction: DIRECTION_ENUM.UP,
+    state: ENTITY_STATE_ENUM.IDLE,
+    type: ENTITY_TYPE_ENUM.WOODENSKELETON,
+  },
+]
+
+// const spikes: Array<ISpikes> = []
+
+const bursts: Array<IEntity> = []
+
+const door: IEntity = {
+  x: 7,
+  y: 8,
+  direction: DIRECTION_ENUM.BOTTOM,
+  state: ENTITY_STATE_ENUM.IDLE,
+  type: ENTITY_TYPE_ENUM.DOOR,
+}
+
+const level: ILevel = {
+  mapInfo,
+  player,
+  enemies,
+  bursts,
+  door,
+}
+
+export default level

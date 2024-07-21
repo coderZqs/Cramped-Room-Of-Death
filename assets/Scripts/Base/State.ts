@@ -3,6 +3,7 @@ import StateMachine from './StateMachine'
 import ResourceManager from '../Runtime/ResourceManager'
 import { FRAME_SPEED } from '../Player/PlayerManager'
 import SubStateMachine from './SubStateMachine'
+import Utils from '../Utils'
 import { FSM_PARAM_TYPE_ENUM, PARAMS_NAME_ENUM } from '../Enum'
 
 class State {
@@ -25,7 +26,10 @@ class State {
 
     const track = new animation.ObjectTrack()
     track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')
-    let frames: Array<[number, SpriteFrame]> = spriteFrame.map((item, index) => [FRAME_SPEED * index, item])
+    let frames: Array<[number, SpriteFrame]> = Utils.sortSpriteFrame(spriteFrame).map((item, index) => [
+      FRAME_SPEED * index,
+      item,
+    ])
 
     track.channel.curve.assignSorted(frames)
     this.animationClip.addTrack(track)
@@ -35,6 +39,12 @@ class State {
   }
 
   run() {
+    if (this.fsm.animationComponent.defaultClip?.name === this.animationClip.name) {
+      return
+    }
+
+    console.log(this.animationClip.name)
+
     this.fsm.animationComponent.defaultClip = this.animationClip
     this.fsm.animationComponent.play()
   }

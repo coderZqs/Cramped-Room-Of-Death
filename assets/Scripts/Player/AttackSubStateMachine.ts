@@ -4,9 +4,9 @@ import StateMachine from '../Base/StateMachine'
 import { CONTROLLER_ENUM } from '../Enum'
 import DirectionSubStateMachine from '../Base/DirectionSubStateMachine'
 
-const BASE_URL = 'texture/player/blockturnleft/'
+const BASE_URL = 'texture/player/attack/'
 
-class TurnLeftSubStateMachine extends DirectionSubStateMachine {
+class AttackSubStateMachine extends DirectionSubStateMachine {
   constructor(fsm: StateMachine) {
     super(fsm)
 
@@ -17,4 +17,4 @@ class TurnLeftSubStateMachine extends DirectionSubStateMachine {
   }
 }
 
-export default TurnLeftSubStateMachine
+export default AttackSubStateMachine

@@ -4,20 +4,17 @@ import StateMachine, { getInitParamsNumber, getInitParamsTrigger } from '../Base
 import SubStateMachine from '../Base/SubStateMachine'
 import { PARAMS_NAME_ENUM } from '../Enum'
 import IdleSubStateMachine from './IdleSubStateMachine'
-import AttackSubStateMachine from './AttackSubStateMachine'
 import DeathSubStateMachine from './DeathSubStateMachine'
 
-class WoodenSkeletonsStateMachine extends StateMachine {
+class DoorStateMachine extends StateMachine {
   initParams() {
     this.params.set(PARAMS_NAME_ENUM.IDLE, getInitParamsTrigger())
-    this.params.set(PARAMS_NAME_ENUM.DIRECTION, getInitParamsNumber())
-    this.params.set(PARAMS_NAME_ENUM.ATTACK, getInitParamsTrigger())
     this.params.set(PARAMS_NAME_ENUM.DEATH, getInitParamsTrigger())
+    this.params.set(PARAMS_NAME_ENUM.DIRECTION, getInitParamsNumber())
   }
 
   initStateMachine() {
     this.stateMachines.set(PARAMS_NAME_ENUM.IDLE, new IdleSubStateMachine(this))
-    this.stateMachines.set(PARAMS_NAME_ENUM.ATTACK, new AttackSubStateMachine(this))
     this.stateMachines.set(PARAMS_NAME_ENUM.DEATH, new DeathSubStateMachine(this))
   }
 
@@ -30,12 +27,12 @@ class WoodenSkeletonsStateMachine extends StateMachine {
   }
 
   run() {
+    console.log(this._currentState)
     switch (this._currentState) {
       case this.stateMachines.get(PARAMS_NAME_ENUM.IDLE):
+      case this.stateMachines.get(PARAMS_NAME_ENUM.DEATH):
         if (this.params.get(PARAMS_NAME_ENUM.IDLE).value) {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.IDLE)
-        } else if (this.params.get(PARAMS_NAME_ENUM.ATTACK).value) {
-          this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.ATTACK)
         } else if (this.params.get(PARAMS_NAME_ENUM.DEATH).value) {
           this.currentState = this.stateMachines.get(PARAMS_NAME_ENUM.DEATH)
         } else {
@@ -50,4 +47,4 @@ class WoodenSkeletonsStateMachine extends StateMachine {
   }
 }
 
-export default WoodenSkeletonsStateMachine
+export default DoorStateMachine
