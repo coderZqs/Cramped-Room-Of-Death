@@ -8,7 +8,6 @@ abstract class DirectionSubStateMachine extends SubStateMachine {
 
   run() {
     const { value: newDirection } = this.fsm.params.get(PARAMS_NAME_ENUM.DIRECTION)
-    console.log(newDirection)
     this.currentState = this.stateMachine.get(DIRECTION_ORDER_ENUM[newDirection as number])
   }
 }

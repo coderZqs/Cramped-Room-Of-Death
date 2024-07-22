@@ -74,15 +74,17 @@ export class PlayerManager extends EntityManager {
       return
     }
 
+    this.judgeBurstDeath()
+
     if (!this.willBlock(direction)) {
       this.move(direction)
     }
+
+    this.judgeBurstAttack()
   }
 
   willBlock(direction): boolean {
     let { targetX: x, targetY: y } = this
-
-    console.log(x, y)
 
     /**
      * 判断移动时是否会被阻挡
@@ -268,9 +270,7 @@ export class PlayerManager extends EntityManager {
     }
   }
 
-  move(controlDirection) {
-    this.isMoving = true
-
+  judgeBurstAttack() {
     let burst = DataManager.Instance.burst
 
     burst.forEach(v => {
@@ -278,6 +278,22 @@ export class PlayerManager extends EntityManager {
         v.state = ENTITY_STATE_ENUM.DEATH
       }
     })
+  }
+
+  judgeBurstDeath() {
+    let burst = DataManager.Instance.burst
+    let playerTile = DataManager.Instance.tileInfo[this.targetX][this.targetY]
+
+    if (
+      !playerTile ||
+      burst.find(v => v.x === this.targetX && v.y === this.targetY)?.state === ENTITY_STATE_ENUM.DEATH
+    ) {
+      this.state = ENTITY_STATE_ENUM.AIRDEATH
+    }
+  }
+
+  move(controlDirection) {
+    this.isMoving = true
 
     if (controlDirection === CONTROLLER_ENUM.UP) {
       this.targetY -= 1
@@ -312,30 +328,22 @@ export class PlayerManager extends EntityManager {
 
       this.state = PARAMS_NAME_ENUM.TURN_RIGHT
     }
-
-    let playerTile = DataManager.Instance.tileInfo[this.targetX][this.targetY]
-
-    if (
-      !playerTile ||
-      burst.find(v => v.x === this.targetX && v.y === this.targetY)?.state === ENTITY_STATE_ENUM.DEATH
-    ) {
-      this.state = ENTITY_STATE_ENUM.AIRDEATH
-    }
   }
 
   willAttack() {
     let enemyGroup = DataManager.Instance.enemy
 
     for (let i = 0; i < enemyGroup.length; i++) {
+      console.log(enemyGroup[i].x, enemyGroup[i].y, this.targetX, this.targetY, this.x, this.y)
       if (
         (this.direction === DIRECTION_ENUM.UP && this.targetY - 2 === enemyGroup[i].y && this.x === enemyGroup[i].x) ||
         (this.direction === DIRECTION_ENUM.BOTTOM &&
           this.targetY + 2 === enemyGroup[i].y &&
           this.x === enemyGroup[i].x) ||
         (this.direction === DIRECTION_ENUM.LEFT &&
-          this.targetX + 2 === enemyGroup[i].x &&
+          this.targetX - 2 === enemyGroup[i].x &&
           this.y === enemyGroup[i].y) ||
-        (this.direction === DIRECTION_ENUM.RIGHT && this.targetX - 2 === enemyGroup[i].x && this.y === enemyGroup[i].y)
+        (this.direction === DIRECTION_ENUM.RIGHT && this.targetX + 2 === enemyGroup[i].x && this.y === enemyGroup[i].y)
       ) {
         if (enemyGroup[i].state !== ENTITY_STATE_ENUM.DEATH) {
           this.state = ENTITY_STATE_ENUM.ATTACK

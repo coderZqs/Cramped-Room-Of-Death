@@ -43,8 +43,6 @@ class State {
       return
     }
 
-    console.log(this.animationClip.name)
-
     this.fsm.animationComponent.defaultClip = this.animationClip
     this.fsm.animationComponent.play()
   }

@@ -77,3 +77,33 @@ export enum DIRECTION_ORDER_ENUM {
   LEFT = 2,
   RIGHT = 3,
 }
+
+export enum SPIKES_SUBSTATE_TYPE {
+  ZERO = 'ZERO',
+  ONE = 'ONE',
+  TWO = 'TWO',
+  THREE = 'THREE',
+  FOUR = 'FOUR',
+  FIVE = 'FIVE',
+}
+
+export enum SPIKES_SUBSTATE_ORDER_ENUM {
+  ZERO = 0,
+  ONE = 1,
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
+}
+
+export enum SPIKES_TYPE {
+  SPIKES_ONE = 'SPIKES_ONE',
+  SPIKES_TWO = 'SPIKES_TWO',
+  SPIKES_THREE = 'SPIKES_THREE',
+  SPIKES_FOUR = 'SPIKES_FOUR',
+}
+
+export enum SPIKES_PARAMS_ENUM {
+  SPIKES_STEP = 'SPIKES_STEP',
+  SPIKES_TYPE = 'SPIKES_TYPE',
+}

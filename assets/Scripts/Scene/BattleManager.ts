@@ -14,6 +14,7 @@ import EnemyManager from '../Base/EnemyManager'
 import DoorManager from '../Door/DoorManager'
 import { DIRECTION_ENUM, ENTITY_STATE_ENUM } from '../Enum/index'
 import BurstManager from '../Burst/BurstManager'
+import SpikesManager from '../Spikes/SpikesManager'
 
 const { ccclass, property } = _decorator
 
@@ -62,6 +63,13 @@ export class BattleManager extends Component {
     player.setSiblingIndex(5)
 
     DataManager.Instance.player = playerManager
+  }
+
+  generateSpikes() {
+    let spike = Utils.createNode('spike')
+    spike.setParent(this.stage)
+
+    let spikeManager = spike.addComponent(SpikesManager)
   }
 
   generateEnemy() {
@@ -126,6 +134,7 @@ export class BattleManager extends Component {
     this.generateDoor()
     this.generateBurst()
     this.generatePlayer()
+    this.generateSpikes()
   }
 
   adoptPos() {
