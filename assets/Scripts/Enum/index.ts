@@ -69,6 +69,10 @@ export enum ENTITY_TYPE_ENUM {
   PLAYER = 'PLAYER',
   WOODENSKELETON = 'WOODENSKELETON',
   IRONSKELETON = 'IRONSKELETON',
+  SPIKES_ONE = 'SPIKES_ONE',
+  SPIKES_TWO = 'SPIKES_TWO',
+  SPIKES_THREE = 'SPIKES_THREE',
+  SPIKES_FOUR = 'SPIKES_FOUR',
 }
 
 export enum DIRECTION_ORDER_ENUM {
@@ -96,6 +100,13 @@ export enum SPIKES_SUBSTATE_ORDER_ENUM {
   FIVE = 5,
 }
 
+export enum SPIKES_MAX_STEP {
+  SPIKES_ONE = 2,
+  SPIKES_TWO = 3,
+  SPIKES_THREE = 4,
+  SPIKES_FOUR = 5,
+}
+
 export enum SPIKES_TYPE {
   SPIKES_ONE = 'SPIKES_ONE',
   SPIKES_TWO = 'SPIKES_TWO',
@@ -103,7 +114,21 @@ export enum SPIKES_TYPE {
   SPIKES_FOUR = 'SPIKES_FOUR',
 }
 
+export enum SPIKES_TYPE_ORDER_ENUM {
+  SPIKES_ONE = 1,
+  SPIKES_TWO = 2,
+  SPIKES_THREE = 3,
+  SPIKES_FOUR = 4,
+}
+
 export enum SPIKES_PARAMS_ENUM {
   SPIKES_STEP = 'SPIKES_STEP',
   SPIKES_TYPE = 'SPIKES_TYPE',
+}
+
+export interface ISpikes {
+  x: number
+  y: number
+  type: SPIKES_TYPE
+  count: number
 }

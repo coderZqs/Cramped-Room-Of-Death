@@ -1,4 +1,4 @@
-import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM } from '../Enum/index'
+import { DIRECTION_ENUM, ENTITY_STATE_ENUM, ENTITY_TYPE_ENUM, ISpikes } from '../Enum/index'
 import { PlayerManager } from '../Player/PlayerManager'
 
 export enum TILE_TYPE_ENUM {
@@ -33,6 +33,7 @@ export interface ILevel {
   door: IEntity
   enemies: Array<IEnemy>
   bursts: Array<IEntity>
+  spikes: Array<ISpikes>
 }
 
 export interface IEntity {

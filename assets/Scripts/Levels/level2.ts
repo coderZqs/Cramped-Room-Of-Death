@@ -1,4 +1,4 @@
-import { DIRECTION_ENUM, ENTITY_TYPE_ENUM, ENTITY_STATE_ENUM } from '../Enum'
+import { DIRECTION_ENUM, ENTITY_TYPE_ENUM, ENTITY_STATE_ENUM, ISpikes } from '../Enum'
 import { TILE_TYPE_ENUM, IEntity, ILevel } from '../Enum/level'
 
 const mapInfo = [
@@ -209,6 +209,8 @@ const enemies: Array<IEntity> = [
   },
 ]
 
+const spikes: Array<ISpikes> = []
+
 const bursts: Array<IEntity> = []
 
 const door: IEntity = {
@@ -225,6 +227,7 @@ const level: ILevel = {
   enemies,
   bursts,
   door,
+  spikes,
 }
 
 export default level

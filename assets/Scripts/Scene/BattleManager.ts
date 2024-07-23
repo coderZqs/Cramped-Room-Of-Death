@@ -34,6 +34,7 @@ export class BattleManager extends Component {
 
   initLevel() {
     const level = Levels[`Level${DataManager.Instance.levelIndex}`]
+    console.log(level)
     this.level = level
 
     DataManager.Instance.mapColCount = level.mapInfo.length
@@ -66,10 +67,19 @@ export class BattleManager extends Component {
   }
 
   generateSpikes() {
-    let spike = Utils.createNode('spike')
-    spike.setParent(this.stage)
+    let spikes = []
 
-    let spikeManager = spike.addComponent(SpikesManager)
+    this.level.spikes.forEach(spikeInfo => {
+      let spike = Utils.createNode('spike')
+      spike.setParent(this.stage)
+      let spikeManager = spike.addComponent(SpikesManager)
+
+      spikeManager.init(spikeInfo)
+
+      spikes.push(spikeManager)
+    })
+
+    DataManager.Instance.spikes = spikes
   }
 
   generateEnemy() {
@@ -133,8 +143,8 @@ export class BattleManager extends Component {
     this.generateEnemy()
     this.generateDoor()
     this.generateBurst()
-    this.generatePlayer()
     this.generateSpikes()
+    this.generatePlayer()
   }
 
   adoptPos() {

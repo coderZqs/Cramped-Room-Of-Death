@@ -6,7 +6,7 @@ import { SPIKES_SUBSTATE_TYPE, SPIKES_SUBSTATE_ORDER_ENUM } from '../Enum'
 
 const BASE_URL = '/texture/spikes/spikestwo/'
 
-export default class SpikesOneSubStateMachine extends SubStateMachine {
+export default class SpikesFourSubStateMachine extends SubStateMachine {
   constructor(fsm) {
     super(fsm)
 

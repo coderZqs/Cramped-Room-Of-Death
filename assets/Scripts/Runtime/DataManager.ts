@@ -5,6 +5,7 @@ import { PlayerManager } from '../Player/PlayerManager'
 import EnemyManager from '../Base/EnemyManager'
 import BurstManager from '../Burst/BurstManager'
 import DoorManager from '../Door/DoorManager'
+import { ISpikes } from '../Enum'
 
 class DataManager extends SingleTon {
   static get Instance() {
@@ -15,11 +16,12 @@ class DataManager extends SingleTon {
   mapInfo: ILevel['mapInfo']
   mapRowCount: ILevel['rowCount']
   mapColCount: ILevel['colCount']
-  levelIndex: number = 1
+  levelIndex: number = 3
   player: PlayerManager = null
   enemy: Array<EnemyManager> = []
   burst: Array<BurstManager> = []
   door: DoorManager = null
+  spikes: Array<ISpikes> = []
 
   reset() {
     //地图信息

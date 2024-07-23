@@ -1,13 +1,16 @@
-import { Sprite, Component, UITransform, Animation, AnimationClip } from 'cc'
+import { Sprite, Component, UITransform, Animation } from 'cc'
 import SpikesStateMachine from './SpikesStateMachine'
 import { TILE_WIDTH, TILE_HEIGHT } from '../Enum/level'
-import { SPIKES_PARAMS_ENUM, SPIKES_SUBSTATE_ORDER_ENUM, SPIKES_SUBSTATE_TYPE, SPIKES_TYPE } from '../Enum'
+import { SPIKES_MAX_STEP, SPIKES_PARAMS_ENUM, SPIKES_TYPE, SPIKES_TYPE_ORDER_ENUM } from '../Enum'
+import EntityManager from '../Base/EntityManager'
 
 export default class SpikesManager extends Component {
   public fsm: SpikesStateMachine = null
   public _state = null
   public _type: SPIKES_TYPE
-  public _step: SPIKES_SUBSTATE_TYPE
+  public _step: number
+  public x: number
+  public y: number
 
   get type() {
     return this._type
@@ -15,7 +18,9 @@ export default class SpikesManager extends Component {
 
   set type(newType) {
     this._type = newType
-    this.fsm.setParams(SPIKES_PARAMS_ENUM.SPIKES_TYPE, newType)
+
+    console.log(SPIKES_TYPE_ORDER_ENUM[newType])
+    this.fsm.setParams(SPIKES_PARAMS_ENUM.SPIKES_TYPE, SPIKES_TYPE_ORDER_ENUM[newType])
   }
 
   get step() {
@@ -24,10 +29,14 @@ export default class SpikesManager extends Component {
 
   set step(newStep) {
     this._step = newStep
-    this.fsm.setParams(SPIKES_PARAMS_ENUM.SPIKES_STEP, SPIKES_SUBSTATE_ORDER_ENUM[newStep])
+    this.fsm.setParams(SPIKES_PARAMS_ENUM.SPIKES_STEP, newStep)
   }
 
-  async start() {
+  update() {
+    this.node.setPosition(this.x * TILE_WIDTH + TILE_HEIGHT * 0.5, -this.y * TILE_HEIGHT - TILE_HEIGHT * 0.5)
+  }
+
+  async init(params) {
     this.fsm = this.addComponent(SpikesStateMachine)
     this.fsm.animationComponent = this.addComponent(Animation)
     await this.fsm.init()
@@ -38,24 +47,22 @@ export default class SpikesManager extends Component {
     let uiTransform = this.addComponent(UITransform)
     uiTransform.setContentSize(TILE_WIDTH * 4, TILE_HEIGHT * 4)
 
-    this.type = SPIKES_TYPE.SPIKES_ONE
-    this.step = SPIKES_SUBSTATE_TYPE.ZERO
+    this.type = params.type
+    this.step = params.count
 
-    this.setAnimation()
+    this.x = params.x
+    this.y = params.y
+
+    this.setLoop()
   }
 
-  setAnimation() {
-    this.fsm.animationComponent.on(Animation.EventType.FINISHED, () => {
-      console.log(this.fsm.animationComponent.defaultClip.name)
-      if (this.fsm.animationComponent.defaultClip.name.includes('zero')) {
-        this.step = SPIKES_SUBSTATE_TYPE.ONE
-      } else if (this.fsm.animationComponent.defaultClip.name.includes('one')) {
-        this.step = SPIKES_SUBSTATE_TYPE.TWO
-      } else if (this.fsm.animationComponent.defaultClip.name.includes('two')) {
-        this.step = SPIKES_SUBSTATE_TYPE.THREE
+  setLoop() {
+    setInterval(() => {
+      if (this.step >= SPIKES_MAX_STEP[this.type]) {
+        this.step = 0
       } else {
-        this.step = SPIKES_SUBSTATE_TYPE.ONE
+        this.step++
       }
-    })
+    }, 1000)
   }
 }
