@@ -1,10 +1,11 @@
 import { getInitParamsNumber } from './../Base/StateMachine'
 import StateMachine from '../Base/StateMachine'
 import SpikesOneSubStateMachine from './SpikesOneSubStateMachine'
-import { SPIKES_PARAMS_ENUM, SPIKES_TYPE, SPIKES_TYPE_ORDER_ENUM } from '../Enum'
+import { SPIKES_MAX_STEP, SPIKES_PARAMS_ENUM, SPIKES_TYPE, SPIKES_TYPE_ORDER_ENUM } from '../Enum'
 import SpikesTwoSubStateMachine from './SpikesTwoSubStateMachine'
 import SpikesThreeSubStateMachine from './SpikeThreeStateMachine'
 import SpikesFourSubStateMachine from './SpikeFourStateMachine'
+import { Animation } from 'cc'
 
 export default class SpikesStateMachine extends StateMachine {
   async init() {

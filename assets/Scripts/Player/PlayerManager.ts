@@ -334,7 +334,6 @@ export class PlayerManager extends EntityManager {
     let enemyGroup = DataManager.Instance.enemy
 
     for (let i = 0; i < enemyGroup.length; i++) {
-      console.log(enemyGroup[i].x, enemyGroup[i].y, this.targetX, this.targetY, this.x, this.y)
       if (
         (this.direction === DIRECTION_ENUM.UP && this.targetY - 2 === enemyGroup[i].y && this.x === enemyGroup[i].x) ||
         (this.direction === DIRECTION_ENUM.BOTTOM &&

@@ -34,7 +34,6 @@ export class BattleManager extends Component {
 
   initLevel() {
     const level = Levels[`Level${DataManager.Instance.levelIndex}`]
-    console.log(level)
     this.level = level
 
     DataManager.Instance.mapColCount = level.mapInfo.length

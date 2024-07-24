@@ -27,7 +27,6 @@ class DoorStateMachine extends StateMachine {
   }
 
   run() {
-    console.log(this._currentState)
     switch (this._currentState) {
       case this.stateMachines.get(PARAMS_NAME_ENUM.IDLE):
       case this.stateMachines.get(PARAMS_NAME_ENUM.DEATH):
