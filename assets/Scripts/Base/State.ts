@@ -12,6 +12,7 @@ class State {
     private fsm: StateMachine,
     private path: string,
     private wrapMode: AnimationClip.WrapMode = AnimationClip.WrapMode.Loop,
+    private speed: number = 1,
   ) {
     this.init()
   }
@@ -27,7 +28,7 @@ class State {
     const track = new animation.ObjectTrack()
     track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame')
     let frames: Array<[number, SpriteFrame]> = Utils.sortSpriteFrame(spriteFrame).map((item, index) => [
-      FRAME_SPEED * index,
+      FRAME_SPEED * index * this.speed,
       item,
     ])
 

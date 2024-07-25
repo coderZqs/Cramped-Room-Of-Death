@@ -6,6 +6,7 @@ import EnemyManager from '../Base/EnemyManager'
 import BurstManager from '../Burst/BurstManager'
 import DoorManager from '../Door/DoorManager'
 import { ISpikes } from '../Enum'
+import SmokeManager from '../Smoke/SmokeManager'
 
 class DataManager extends SingleTon {
   static get Instance() {
@@ -22,6 +23,7 @@ class DataManager extends SingleTon {
   burst: Array<BurstManager> = []
   door: DoorManager = null
   spikes: Array<ISpikes> = []
+  smoke: SmokeManager = null
 
   reset() {
     //地图信息

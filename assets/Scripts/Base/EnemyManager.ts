@@ -31,16 +31,16 @@ export default class EnemyManager extends Component {
   async init(params: IEnemy) {
     this.y = params.y
     this.x = params.x
+
+    console.log(params)
     this.type = params.type
 
-    this.state = PARAMS_NAME_ENUM.IDLE
-    this.direction = DIRECTION_ENUM.UP
+    this.state = params.state
+    this.direction = params.direction
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_BORN, this.changeDirectionByPlayer, this)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_MOVE_END, this.changeDirectionByPlayer, this)
     EventManager.Instance.on(EVENT_ENUM.ENEMY_DEATH, this.onDeath, this)
-
-    this.changeDirectionByPlayer()
   }
 
   protected onDestroy(): void {
@@ -116,6 +116,7 @@ export default class EnemyManager extends Component {
       (Math.abs(this.y - playerY) === 1 && this.x === playerX)
     ) {
       this.state = PARAMS_NAME_ENUM.ATTACK
+      console.log(this.x, this.y)
       EventManager.Instance.emit(EVENT_ENUM.PLAYER_DEATH)
     }
   }

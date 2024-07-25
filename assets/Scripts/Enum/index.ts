@@ -6,6 +6,8 @@ export enum EVENT_ENUM {
   ENEMY_DEATH = 'ENEMY_DEATH',
   PLAYER_BORN = 'PLAYER_BORN',
   DOOR_OPEN = 'DOOR_OPEN',
+  SMOKE_GENERATE = 'SMOKE_GENERATE',
+  PLAYER_BLOCK = 'PLAYER_BLOCK',
 }
 
 /***
@@ -53,6 +55,7 @@ export enum ENTITY_STATE_ENUM {
   DEATH = 'DEATH',
   AIRDEATH = 'AIRDEATH',
   OPEN = 'OPEN',
+  SMOKE = 'SMOKE',
 }
 
 export enum CONTROLLER_ENUM {
@@ -73,6 +76,7 @@ export enum ENTITY_TYPE_ENUM {
   SPIKES_TWO = 'SPIKES_TWO',
   SPIKES_THREE = 'SPIKES_THREE',
   SPIKES_FOUR = 'SPIKES_FOUR',
+  SMOKE = 'SMOKE',
 }
 
 export enum DIRECTION_ORDER_ENUM {
@@ -131,4 +135,9 @@ export interface ISpikes {
   y: number
   type: SPIKES_TYPE
   count: number
+}
+
+export enum SHOCK_DIRECTION {
+  VERTICAL = 'VERTICAL',
+  HORIZONTAL = 'HORIZONTAL',
 }

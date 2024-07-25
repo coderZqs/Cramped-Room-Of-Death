@@ -8,6 +8,7 @@ import {
   ENTITY_TYPE_ENUM,
   EVENT_ENUM,
   PARAMS_NAME_ENUM,
+  SHOCK_DIRECTION,
 } from '../Enum'
 import EntityManager from '../Base/EntityManager'
 import DataManager from '../Runtime/DataManager'
@@ -23,6 +24,7 @@ export class PlayerManager extends EntityManager {
   public isMoving = false
 
   async init(params) {
+    console.log(params)
     this.fsm = this.addComponent(PlayerStateMachine)
     await this.fsm.init()
     super.init(params)
@@ -32,8 +34,6 @@ export class PlayerManager extends EntityManager {
 
     EventManager.Instance.on(EVENT_ENUM.PLAYER_CONTROL, this.inputHandle, this)
     EventManager.Instance.on(EVENT_ENUM.PLAYER_DEATH, this.onDeath, this)
-
-    EventManager.Instance.emit(EVENT_ENUM.PLAYER_BORN)
   }
 
   onDestroy() {
@@ -153,6 +153,14 @@ export class PlayerManager extends EntityManager {
         } else if (DIRECTION_ENUM.RIGHT === this.direction) {
           let index = directions.findIndex(v => v.includes(direction))
           params = directions[index - 1 >= 0 ? index - 1 : 3 % (index - 1)]
+        }
+
+        console.log(params)
+
+        if (direction === CONTROLLER_ENUM.UP || direction === CONTROLLER_ENUM.BOTTOM) {
+          EventManager.Instance.emit(EVENT_ENUM.PLAYER_BLOCK, SHOCK_DIRECTION.VERTICAL)
+        } else {
+          EventManager.Instance.emit(EVENT_ENUM.PLAYER_BLOCK, SHOCK_DIRECTION.HORIZONTAL)
         }
 
         this.state = params
@@ -294,6 +302,15 @@ export class PlayerManager extends EntityManager {
 
   move(controlDirection) {
     this.isMoving = true
+
+    if (
+      controlDirection === CONTROLLER_ENUM.UP ||
+      controlDirection === CONTROLLER_ENUM.BOTTOM ||
+      controlDirection === CONTROLLER_ENUM.LEFT ||
+      controlDirection === CONTROLLER_ENUM.RIGHT
+    ) {
+      EventManager.Instance.emit(EVENT_ENUM.SMOKE_GENERATE, { x: this.x, y: this.y, direction: controlDirection })
+    }
 
     if (controlDirection === CONTROLLER_ENUM.UP) {
       this.targetY -= 1
